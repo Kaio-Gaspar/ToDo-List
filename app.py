@@ -2,12 +2,14 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 import customtkinter
+from workbook import *
 
 root = Tk()
 
 class App():
     def __init__(self, root):
         self.root = root
+        self.get_log()
         self.Window()
         self.Frames()
         self.Buttons()
@@ -52,7 +54,9 @@ class App():
         self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico",text_color='black', fg_color='blue')
         self.button_plot_graph.place(relx=0.1, rely=0.753)
 
-    
+        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log",text_color='black', fg_color='orange', command=self.get_log())
+        self.button_log.place(relx=0.35, rely=0.755)
+
     def on_entry_click(self, event):
         if self.text_entry.get() == 'Insira sua tarefa aqui':
             self.text_entry.delete(0, tk.END)
@@ -63,6 +67,11 @@ class App():
         if not self.text_entry.get():
             self.text_entry.insert(0, 'Insira sua tarefa aqui')
             self.text_entry.config(fg='grey')  
+    
+    def get_log(self):
+        wb.create_sheet("Mysheet")
+        
+        
     
 
 App(root)
