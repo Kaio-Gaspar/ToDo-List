@@ -7,9 +7,9 @@ timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 wb = Workbook()
 
-def make_wb():
+def get_log():
     if not os.path.exists('logs'):
         os.mkdir('logs')
     wb.save(os.path.join('logs', f'log_{timestamp}.xlsx'))
 
-make_wb()
+
