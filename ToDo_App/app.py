@@ -4,6 +4,7 @@ import tkinter as tk
 import customtkinter
 from workbook import *
 from time import strftime
+from functions import *
 
 
 root = Tk()
@@ -15,7 +16,9 @@ class App():
         self.Frames()
         self.Buttons()
         self.Add_clock()
+        self.lista_tarefas = [] 
         root.mainloop()
+
         
     def Window(self):
         self.root.title('ToDo List')
@@ -25,8 +28,8 @@ class App():
 
         
     def Frames(self):
-        self.frame_1 = Frame(self.root, bg='white', bd=4, highlightbackground='#007A78', highlightthickness=8)
-        self.frame_1.place(relx=0.1, rely=0.25, relheight=0.5, relwidth=0.8)
+        self.lista_tarefas_lb = Listbox(self.root, bg='white', bd=4, highlightbackground='#007A78', highlightthickness=8)
+        self.lista_tarefas_lb.place(relx=0.1, rely=0.25, relheight=0.5, relwidth=0.8)
 
         self.frame_2 = Frame(self.root, bg='#007A78', bd=4, highlightbackground='#007A78', highlightthickness=4)
         self.frame_2.place(relx=0.1, rely=0.1, relheight=0.1, relwidth=0.8)  # Alterado o rely para posicionar abaixo do frame_1
@@ -44,19 +47,22 @@ class App():
         
     def Buttons(self):
         
-        self.button_add = customtkinter.CTkButton(self.root, text="Adicionar Tarefa", fg_color='#09ff00', text_color='black')
+        self.button_add = customtkinter.CTkButton(self.root, text="Adicionar Tarefa", fg_color='#09ff00', text_color='black', command=lambda: adicionar_tarefa(self.text_entry, self.lista_tarefas_lb, self.lista_tarefas))
         self.button_add.place(relx=0.74, rely=0.04)
 
-        self.button_remove = customtkinter.CTkButton(self.root, text="Remover tarefa",text_color='black', fg_color='red')
+        self.button_remove = customtkinter.CTkButton(self.root, text="Remover tarefa", text_color='black', fg_color='red', command=lambda: remover_tarefa(self.lista_tarefas_lb, self.lista_tarefas))
         self.button_remove.place(relx=0.74, rely=0.76)
 
-        self.button_select_all = customtkinter.CTkButton(self.root, text="Selecionar tudo",text_color='black', fg_color='yellow')
+        self.button_select_all = customtkinter.CTkButton(self.root, text="Selecionar tudo", text_color='black', fg_color='yellow', command=lambda: selecionar_todas_tarefas(self.lista_tarefas_lb))
         self.button_select_all.place(relx=0.55, rely=0.758)
 
-        self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico",text_color='black', fg_color='blue')
+        self.button_marcar_concluida = customtkinter.CTkButton(self.root, text="Marcar como concluída", text_color='black', fg_color='green', command=self.marcar_como_concluida)
+        self.button_marcar_concluida.place(relx=0.3, rely=0.758)
+
+        self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico", text_color='black', fg_color='blue')
         self.button_plot_graph.place(relx=0.1, rely=0.753)
 
-        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log",text_color='black', fg_color='orange', command=get_log)
+        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log", text_color='black', fg_color='orange', command=get_log)
         self.button_log.place(relx=0.35, rely=0.755)
 
     def on_entry_click(self, event):
@@ -85,6 +91,14 @@ class App():
         self.clock_label.config(text=hora_atual)
         # Chama novamente após 1 segundo
         self.clock_label.after(1000, self.update_clock)
-    
+
+    def marcar_como_concluida(self):
+        selecoes = self.lista_tarefas_lb.curselection()
+        if selecoes:
+            for indice in selecoes:
+                tarefa = self.lista_tarefas[indice]
+                tarefa_concluida = f'[Concluída] {tarefa}'
+                self.lista_tarefas[indice] = tarefa_concluida
+            self.atualizar_lista_tarefas()
 
 App(root)
