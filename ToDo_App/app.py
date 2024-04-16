@@ -3,6 +3,8 @@ from tkinter import ttk
 import tkinter as tk
 import customtkinter
 from workbook import *
+from time import strftime
+
 
 root = Tk()
 
@@ -12,6 +14,7 @@ class App():
         self.Window()
         self.Frames()
         self.Buttons()
+        self.Add_clock()
         root.mainloop()
         
     def Window(self):
@@ -34,7 +37,7 @@ class App():
         self.text_entry.bind("<FocusIn>", self.on_entry_click)  # Vincula evento FocusIn
         self.text_entry.bind("<FocusOut>", self.on_focus_out)
         self.text_entry.pack(fill='both', expand=True)
-
+    
         
 
 
@@ -67,7 +70,21 @@ class App():
             self.text_entry.insert(0, 'Insira sua tarefa aqui')
             self.text_entry.config(fg='grey')  
     
-        
+    def Add_clock(self):
+        # Cria um rótulo para exibir o relógio no canto da janela
+        self.clock_label = Label(self.root, font=('calibri', 20, 'bold'), background='#09112e', foreground='white')
+        self.clock_label.place(relx=0.001, rely=0)  # Posiciona o rótulo no canto sudeste da janela
+
+        # Atualiza o relógio a cada segundo
+        self.update_clock()
+
+    def update_clock(self):
+        # Obtém a hora atual
+        hora_atual = strftime('%H:%M:%S %p')
+        # Atualiza o texto do rótulo do relógio
+        self.clock_label.config(text=hora_atual)
+        # Chama novamente após 1 segundo
+        self.clock_label.after(1000, self.update_clock)
     
 
 App(root)
