@@ -35,7 +35,7 @@ class App():
         self.text_entry.pack(fill='both', expand=True)
 
         
-       
+
 
         
     def Buttons(self):
@@ -48,6 +48,9 @@ class App():
 
         self.button_select_all = customtkinter.CTkButton(self.root, text="Selecionar tudo",text_color='black', fg_color='yellow')
         self.button_select_all.place(relx=0.55, rely=0.758)
+
+        self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico",text_color='black', fg_color='blue')
+        self.button_plot_graph.place(relx=0.1, rely=0.753)
 
     
     def on_entry_click(self, event):
