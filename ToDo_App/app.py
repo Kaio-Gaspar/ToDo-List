@@ -4,6 +4,10 @@ import tkinter as tk
 import customtkinter
 from time import strftime
 from functions import *
+import  matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+
 
 root = Tk()
 
@@ -15,6 +19,8 @@ class App():
         self.Buttons()
         self.Add_clock()
         self.lista_tarefas = [] 
+        self.contar_tarefa_concluida()
+        
         root.mainloop()
 
     def Window(self):
@@ -50,11 +56,8 @@ class App():
         self.button_marcar_concluida = customtkinter.CTkButton(self.root, text="Marcar como concluída", text_color='black', fg_color='green', command=self.marcar_como_concluida)
         self.button_marcar_concluida.place(relx=0.3, rely=0.758)
 
-        self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico", text_color='black', fg_color='blue')
-        self.button_plot_graph.place(relx=0.1, rely=0.753)
-
-        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log", text_color='black', fg_color='orange')
-        self.button_log.place(relx=0.1, rely=0.82)
+        self.button_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico", text_color='black', fg_color='blue', command=self.plot_graph)
+        self.button_graph.place(relx=0.1, rely=0.753)
 
     def on_entry_click(self, event):
         if self.text_entry.get() == 'Insira sua tarefa aqui':
@@ -90,6 +93,7 @@ class App():
                 if '[Concluída]' not in tarefa: 
                     tarefa_concluida = f'[Concluída] {tarefa}'
                     self.lista_tarefas[indice] = tarefa_concluida
+                    print(tarefa)
                 else:
                     self.text_entry.config(fg='red')
                     self.text_entry.delete(0, 'end') 
@@ -102,5 +106,33 @@ class App():
         # Adiciona as tarefas atualizadas
         for tarefa in self.lista_tarefas:
             self.lista_tarefas_lb.insert(END, tarefa)
+
+    def contar_tarefa_concluida(self):
+        contagem_tarefa_nao_concluida = 0
+        contagem_tarefa_concluida = 0
+        for tarefa in self.lista_tarefas:
+            if '[Concluída]' in tarefa:
+                contagem_tarefa_concluida += 1
+            else:
+                contagem_tarefa_nao_concluida += 1
+        
+        return contagem_tarefa_concluida, contagem_tarefa_nao_concluida
+
+    def plot_graph(self):
+        concluidas, nao_concluidas = self.contar_tarefa_concluida()
+
+        
+        sizes = [concluidas, nao_concluidas]
+        cores = ['#00FF00', '#FF0000']
+        fig, ax = plt.subplots(figsize=(1, 1))
+        ax.pie(sizes,  autopct='%1.1f%%', startangle=90,  colors=cores)
+        
+
+
+        # Cria um objeto FigureCanvasTkAgg passando a figura criada
+        canvas = FigureCanvasTkAgg(fig, master=self.root)
+        canvas.draw()
+        # Define a posição do widget FigureCanvasTkAgg
+        canvas.get_tk_widget().place(relx=0.1, rely=0.81)
 
 App(root)
