@@ -12,4 +12,3 @@ def get_log():
         os.mkdir('logs')
     wb.save(os.path.join('logs', f'log_{timestamp}.xlsx'))
 
-

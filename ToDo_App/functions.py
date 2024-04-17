@@ -19,12 +19,12 @@ def atualizar_lista_tarefas(lista_tarefas_lb, lista_tarefas):
     lista_tarefas_lb.delete(0, 'end')
     for tarefa in lista_tarefas:
         lista_tarefas_lb.insert('end', tarefa)
-
-def marcar_como_concluida():
-    selecoes = app.lista_tarefas_lb.curselection()
-    if selecoes:
-        for indice in selecoes:
-            tarefa = app.lista_tarefas[indice]
-            tarefa_concluida = f'[Concluída] {tarefa}'
-            app.lista_tarefas[indice] = tarefa_concluida
-        app.atualizar_lista_tarefas()
+        
+def marcar_como_concluida(self):
+        selecoes = self.lista_tarefas_lb.curselection()
+        if selecoes:
+            for indice in selecoes:
+                tarefa = self.lista_tarefas[indice]
+                tarefa_concluida = f'[Concluída] {tarefa}'
+                self.lista_tarefas[indice] = tarefa_concluida
+            self.atualizar_lista_tarefas()

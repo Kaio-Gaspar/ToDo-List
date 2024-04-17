@@ -2,10 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 import customtkinter
-from workbook import *
 from time import strftime
 from functions import *
-
 
 root = Tk()
 
@@ -19,14 +17,12 @@ class App():
         self.lista_tarefas = [] 
         root.mainloop()
 
-        
     def Window(self):
         self.root.title('ToDo List')
         self.root.configure(background='#09112e')
         self.root.geometry('900x600')
         self.root.resizable(True, True)
 
-        
     def Frames(self):
         self.lista_tarefas_lb = Listbox(self.root, bg='white', bd=4, highlightbackground='#007A78', highlightthickness=8)
         self.lista_tarefas_lb.place(relx=0.1, rely=0.25, relheight=0.5, relwidth=0.8)
@@ -40,13 +36,8 @@ class App():
         self.text_entry.bind("<FocusIn>", self.on_entry_click)  # Vincula evento FocusIn
         self.text_entry.bind("<FocusOut>", self.on_focus_out)
         self.text_entry.pack(fill='both', expand=True)
-    
-        
 
-
-        
     def Buttons(self):
-        
         self.button_add = customtkinter.CTkButton(self.root, text="Adicionar Tarefa", fg_color='#09ff00', text_color='black', command=lambda: adicionar_tarefa(self.text_entry, self.lista_tarefas_lb, self.lista_tarefas))
         self.button_add.place(relx=0.74, rely=0.04)
 
@@ -62,15 +53,14 @@ class App():
         self.button_plot_graph = customtkinter.CTkButton(self.root, text="Gerar gráfico", text_color='black', fg_color='blue')
         self.button_plot_graph.place(relx=0.1, rely=0.753)
 
-        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log", text_color='black', fg_color='orange', command=get_log)
-        self.button_log.place(relx=0.35, rely=0.755)
+        self.button_log = customtkinter.CTkButton(self.root, text="Gerar log", text_color='black', fg_color='orange')
+        self.button_log.place(relx=0.1, rely=0.82)
 
     def on_entry_click(self, event):
         if self.text_entry.get() == 'Insira sua tarefa aqui':
             self.text_entry.delete(0, tk.END)
             self.text_entry.config(fg='black')  
 
-    # Função para restaurar o texto placeholder se a entrada estiver vazia quando perder o foco
     def on_focus_out(self, event):
         if not self.text_entry.get():
             self.text_entry.insert(0, 'Insira sua tarefa aqui')
@@ -97,8 +87,20 @@ class App():
         if selecoes:
             for indice in selecoes:
                 tarefa = self.lista_tarefas[indice]
-                tarefa_concluida = f'[Concluída] {tarefa}'
-                self.lista_tarefas[indice] = tarefa_concluida
+                if '[Concluída]' not in tarefa: 
+                    tarefa_concluida = f'[Concluída] {tarefa}'
+                    self.lista_tarefas[indice] = tarefa_concluida
+                else:
+                    self.text_entry.config(fg='red')
+                    self.text_entry.delete(0, 'end') 
+                    self.text_entry.insert(0, 'Tarefas selecionadas ja foram conluidas') 
             self.atualizar_lista_tarefas()
+
+    def atualizar_lista_tarefas(self):
+        # Limpa a Listbox
+        self.lista_tarefas_lb.delete(0, END)
+        # Adiciona as tarefas atualizadas
+        for tarefa in self.lista_tarefas:
+            self.lista_tarefas_lb.insert(END, tarefa)
 
 App(root)
